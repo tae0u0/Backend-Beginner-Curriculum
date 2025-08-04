@@ -1,4 +1,4 @@
-package com.gdgoc.xml;
+package com.gdgoc.webServlet;
 
 public class ServerApplication {
     public static void main(String[] args) {

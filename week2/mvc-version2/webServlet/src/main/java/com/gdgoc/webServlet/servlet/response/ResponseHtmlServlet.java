@@ -7,22 +7,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
-@WebServlet(name = "requestParamServlet", urlPatterns = "/request-param")
-public class ResponseTextServlet extends HttpServlet {
+@WebServlet(name = "responseHtmlServlet", urlPatterns = "/response-html")
+public class ResponseHtmlServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("단일 파라미터 조회");
-        String singleName = request.getParameter("name");
-        System.out.println(singleName);
+        response.setContentType("text/html");
+        response.setCharacterEncoding("utf-8");
 
-        System.out.println("복수 파라미터 조회");
-        String[] names = request.getParameterValues("name");
-        for(String name : names){
-            System.out.println(name);
-        }
-
-        response.getWriter().write("ok");
+        PrintWriter writer = response.getWriter();
+        writer.println("<html>");
+        writer.println("<body>");
+        writer.println(" <div> HtmlServlet </div>");
+        writer.println("</body>");
+        writer.println("</html>");
     }
 }

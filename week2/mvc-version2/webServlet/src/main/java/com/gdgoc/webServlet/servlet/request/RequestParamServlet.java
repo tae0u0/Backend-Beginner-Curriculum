@@ -1,4 +1,4 @@
-package com.gdgoc.webServlet.servlet;
+package com.gdgoc.webServlet.servlet.request;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +19,7 @@ public class RequestParamServlet extends HttpServlet {
 
         System.out.println("복수 파라미터 조회");
         String[] names = request.getParameterValues("name");
-        for(String name : names){
+        for (String name : names) {
             System.out.println(name);
         }
 

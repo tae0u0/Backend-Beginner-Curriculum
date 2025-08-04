@@ -1,4 +1,4 @@
-package com.gdgoc.webServlet.servlet;
+package com.gdgoc.webServlet.servlet.request;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -6,22 +6,26 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
-@WebServlet(name = "requestParamServlet", urlPatterns = "/request-param")
-public class RequestFormServlet extends HttpServlet {
+@WebServlet(name = "requestTextServlet", urlPatterns = "/request-text")
+public class RequestTextServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("단일 파라미터 조회");
-        String singleName = request.getParameter("name");
-        System.out.println(singleName);
+        System.out.println("TEXT 조회");
 
-        System.out.println("복수 파라미터 조회");
-        String[] names = request.getParameterValues("name");
-        for(String name : names){
-            System.out.println(name);
+        StringBuilder messageBody = new StringBuilder();
+        BufferedReader reader = request.getReader();
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+            messageBody.append(line);
         }
+
+        String text = messageBody.toString();
+        System.out.println("받은 텍스트: " + text);
 
         response.getWriter().write("ok");
     }
