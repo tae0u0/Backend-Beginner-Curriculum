@@ -1,12 +1,11 @@
 package com.gdgoc.web.frontcontroller.controller;
 
-import com.gdgoc.web.frontcontroller.MyView;
+import com.gdgoc.web.frontcontroller.ModelView;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Map;
 
 public interface Controller {
-    MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+    ModelView process(Map<String, String> paramMap) throws ServletException, IOException;
 }

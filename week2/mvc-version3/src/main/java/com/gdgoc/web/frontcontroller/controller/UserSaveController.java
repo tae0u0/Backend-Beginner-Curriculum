@@ -2,22 +2,23 @@ package com.gdgoc.web.frontcontroller.controller;
 
 import com.gdgoc.web.domain.User;
 import com.gdgoc.web.domain.UserRepository;
-import com.gdgoc.web.frontcontroller.MyView;
+import com.gdgoc.web.frontcontroller.ModelView;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class UserSaveController implements Controller {
     private UserRepository userRepository = UserRepository.getInstance();
 
     @Override
-    public MyView process(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
+    public ModelView process(Map<String, String> paramMap) throws ServletException, IOException {
+        String name = paramMap.get("name");
         User user = new User(name);
         userRepository.save(user);
-        request.setAttribute("user", user);
-        return new MyView("/WEB-INF/views/save.jsp");
+
+        ModelView mv = new ModelView("save");
+        mv.getModel().put("user", user);
+        return mv;
     }
 }
