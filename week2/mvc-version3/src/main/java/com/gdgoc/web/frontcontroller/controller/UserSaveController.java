@@ -12,13 +12,12 @@ public class UserSaveController implements Controller {
     private UserRepository userRepository = UserRepository.getInstance();
 
     @Override
-    public ModelView process(Map<String, String> paramMap) throws ServletException, IOException {
+    public String process(Map<String, String> paramMap, Map<String, Object> model) throws ServletException, IOException {
         String name = paramMap.get("name");
         User user = new User(name);
         userRepository.save(user);
 
-        ModelView mv = new ModelView("save");
-        mv.getModel().put("user", user);
-        return mv;
+        model.put("user", user);
+        return "save";
     }
 }
