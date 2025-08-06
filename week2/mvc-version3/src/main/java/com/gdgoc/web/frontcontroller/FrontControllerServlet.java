@@ -1,5 +1,8 @@
 package com.gdgoc.web.frontcontroller;
 
+import com.gdgoc.web.frontcontroller.adapter.ControllerHandlerAdapter;
+import com.gdgoc.web.frontcontroller.adapter.ControllerV2HandlerAdapter;
+import com.gdgoc.web.frontcontroller.adapter.MyHandlerAdapter;
 import com.gdgoc.web.frontcontroller.controller.Controller;
 import com.gdgoc.web.frontcontroller.controller.UserListController;
 import com.gdgoc.web.frontcontroller.controller.UserSaveController;
@@ -10,43 +13,62 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @WebServlet(name = "frontControllerServlet", urlPatterns = "/front-controller/*")
 public class FrontControllerServlet extends HttpServlet {
-    private final Map<String, Controller> controllerMap = new HashMap<>();
+    private final Map<String, Object> handlerMappingMap = new HashMap<>();
+    private final List<MyHandlerAdapter> handlerAdapters = new ArrayList<>();
 
     public FrontControllerServlet() {
-        controllerMap.put("/front-controller/users/list", new UserListController());
-        controllerMap.put("/front-controller/users/save", new UserSaveController());
+        initHandlerMappingMap();
+        initHandlerAdapters();
+    }
+
+    private void initHandlerMappingMap() {
+        handlerMappingMap.put("/front-controller/users/list", new UserListController());
+        handlerMappingMap.put("/front-controller/users/save", new UserSaveController());
+    }
+    private void initHandlerAdapters() {
+        handlerAdapters.add(new ControllerHandlerAdapter());
+        handlerAdapters.add(new ControllerV2HandlerAdapter());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse
             response)
             throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
-        Controller controller = controllerMap.get(requestURI);
-        if (controller == null) {
+        Object handler = getHandler(request);
+
+        if (handler == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        Map<String, String> paramMap = createParamMap(request);
-        Map<String, Object> model = new HashMap<>();
 
-        String viewName = controller.process(paramMap, model);
-        MyView view = viewResolver(viewName);
-        view.render(model, request, response);
+        MyHandlerAdapter adapter = getHandlerAdapter(handler);
+        ModelView mv = adapter.handle(request, response, handler);
+
+        MyView view = viewResolver(mv.getViewName());
+        view.render(mv.getModel(), request, response);
     }
 
-    private Map<String, String> createParamMap(HttpServletRequest request) {
-        Map<String, String> paramMap = new HashMap<>();
-        request.getParameterNames().asIterator()
-                .forEachRemaining(paramName -> paramMap.put(paramName,
-                        request.getParameter(paramName)));
-        return paramMap;
+    private Object getHandler(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return handlerMappingMap.get(requestURI);
     }
+
+    private MyHandlerAdapter getHandlerAdapter(Object handler) {
+        for (MyHandlerAdapter adapter : handlerAdapters) {
+            if (adapter.supports(handler)) {
+                return adapter;
+            }
+        }
+        throw new IllegalArgumentException("handler adapter를 찾을 수 없습니다. handler=" + handler);
+    }
+
     private MyView viewResolver(String viewName) {
         return new MyView("/WEB-INF/views/" + viewName + ".jsp");
     }

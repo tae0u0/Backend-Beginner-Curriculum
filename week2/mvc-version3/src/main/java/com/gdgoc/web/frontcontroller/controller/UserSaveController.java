@@ -2,13 +2,12 @@ package com.gdgoc.web.frontcontroller.controller;
 
 import com.gdgoc.web.domain.User;
 import com.gdgoc.web.domain.UserRepository;
-import com.gdgoc.web.frontcontroller.ModelView;
 import jakarta.servlet.ServletException;
 
 import java.io.IOException;
 import java.util.Map;
 
-public class UserSaveController implements Controller {
+public class UserSaveController implements ControllerV2 {
     private UserRepository userRepository = UserRepository.getInstance();
 
     @Override
