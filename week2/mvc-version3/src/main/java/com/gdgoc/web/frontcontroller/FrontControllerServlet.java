@@ -3,7 +3,6 @@ package com.gdgoc.web.frontcontroller;
 import com.gdgoc.web.frontcontroller.adapter.ControllerHandlerAdapter;
 import com.gdgoc.web.frontcontroller.adapter.ControllerV2HandlerAdapter;
 import com.gdgoc.web.frontcontroller.adapter.MyHandlerAdapter;
-import com.gdgoc.web.frontcontroller.controller.Controller;
 import com.gdgoc.web.frontcontroller.controller.UserListController;
 import com.gdgoc.web.frontcontroller.controller.UserSaveController;
 import jakarta.servlet.ServletException;
@@ -32,15 +31,14 @@ public class FrontControllerServlet extends HttpServlet {
         handlerMappingMap.put("/front-controller/users/list", new UserListController());
         handlerMappingMap.put("/front-controller/users/save", new UserSaveController());
     }
+
     private void initHandlerAdapters() {
         handlerAdapters.add(new ControllerHandlerAdapter());
         handlerAdapters.add(new ControllerV2HandlerAdapter());
     }
 
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse
-            response)
-            throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Object handler = getHandler(request);
 
         if (handler == null) {
