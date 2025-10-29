@@ -1,0 +1,1 @@
+insert into team (name) values ('스프링'),('노드')
