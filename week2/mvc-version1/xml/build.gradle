@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'application'
+}
+
+group = 'com.gdgoc.xml'
+version = '1.0.0'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    providedCompile 'jakarta.servlet.jsp:jakarta.servlet.jsp-api:3.0.0'
+
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:10.1.13"
+    implementation "org.apache.tomcat.embed:tomcat-embed-jasper:10.1.13"
+    implementation "org.apache.commons:commons-lang3:3.13.0"
+}
+
+application {
+    mainClass = 'com.gdgoc.xml.ServerApplication'
+}
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += ['-Dfile.encoding=UTF-8']
+}
